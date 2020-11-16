@@ -1,138 +1,112 @@
-#include "TArrayList.h"
+#include "TList.h"
 #include <gtest.h>
 
-TEST(TArrayList, can_create_Arraylist)
+TEST(TList, can_create_list)
 {
-	ASSERT_NO_THROW(TArrayList<int> temp(10));
+  ASSERT_NO_THROW(TList<int> temp);
 }
 
-TEST(TArrayList, can_create_Arraylist_Iterator)
+TEST(TList, can_copy_list)
 {
-	TArrayList<int> temp(10);
-	ASSERT_NO_THROW(TArrayListIterator<int> i(temp));
+  TList<int> temp;
+  ASSERT_NO_THROW(TList<int> temp2(temp));
 }
 
-TEST(TArrayList, can_copy_Arraylist)
+TEST(TList, can_assign_list)
 {
-	TArrayList<int> temp(10);
-	ASSERT_NO_THROW(TArrayList<int> temp2(temp));
+  TList<int> temp;
+  ASSERT_NO_THROW(TList<int> temp2 = temp);
 }
 
-TEST(TArrayList, can_copy_Arraylist_Iterator)
+TEST(TList, can_insert_elem_in_first_list)
 {
-	TArrayList<int> temp(10);
-	TArrayListIterator<int> i(temp);
-	ASSERT_NO_THROW(TArrayListIterator<int> j = i);
+  TList<int> temp;
+  ASSERT_NO_THROW(temp.InsFirst(10));
 }
 
-TEST(TArrayList, can_insert_elem_first) //Вставка элемента в начало
+TEST(TList, can_insert_elem_in_last_list)
 {
-	TArrayList<int> temp(10);
-	ASSERT_NO_THROW(temp.InsFirst(1));
+  TList<int> temp;
+  ASSERT_NO_THROW(temp.InsLast(10));
 }
 
-TEST(TArrayList, cant_insert_elem_isFull)
+TEST(TList, check_is_full)
 {
-	TArrayList<int> temp(1);
-	temp.InsFirst(1);
-	ASSERT_ANY_THROW(temp.InsFirst(2));
+  TList<int> temp;
+
+  EXPECT_EQ(temp.IsFull(), false);
 }
 
-TEST(TArrayList, can_insert_elem_last)
+TEST(TList, check_is_empty)
 {
-	TArrayList<int> temp(10);
-	ASSERT_NO_THROW(temp.InsLast(1));
+  TList<int> temp;
+
+  EXPECT_EQ(temp.IsEmpty(), true);
 }
 
-TEST(TArrayList, can_insert_through_iterator)
+TEST(TList, can_get_elem_first)
 {
-	TArrayList<char> temp(10);
-	temp.InsFirst('a');
-	temp.InsLast('b');
-	temp.InsFirst('c');
-	TArrayListIterator<char> i(temp, 1);
-	ASSERT_NO_THROW(temp.Ins(i, 'd'));
+  TList<int> temp;
+  temp.InsFirst(10);
+  ASSERT_NO_THROW(temp.GetFirst());
 }
 
-TEST(TArrayList, check_isFull)
+TEST(TList, can_get_elem_last)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-
-	EXPECT_EQ(temp.IsFull(), true);
+  TList<int> temp;
+  temp.InsFirst(10);
+  temp.InsLast(20);
+  ASSERT_NO_THROW(temp.GetLast());
 }
 
-TEST(TArrayList, check_isEmpty)
+TEST(TList, can_del_elem_first)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-
-	EXPECT_EQ(temp.IsEmpty(), false);
+  TList<int> temp;
+  temp.InsFirst(10);
+  temp.InsLast(20);
+  ASSERT_NO_THROW(temp.DelFirst());
 }
 
-
-TEST(TArrayList, can_del_first)
+TEST(TList, can_del_elem_last)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-
-	ASSERT_NO_THROW(temp.DelFirst());
+  TList<int> temp;
+  temp.InsFirst(10);
+  temp.InsLast(20);
+  ASSERT_NO_THROW(temp.DelLast());
 }
 
-TEST(TArrayList, can_del_last)
+TEST(TList, can_get_count)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-
-	ASSERT_NO_THROW(temp.DelLast());
+  TList<int> temp;
+  temp.InsFirst(10);
+  temp.InsLast(20);
+  ASSERT_NO_THROW(temp.GetCount());
 }
 
-TEST(TArrayList, can_Get_first)
+TEST(TListElem, can_get_data_listelem)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
+  TListElem<int> temp(10);
 
-	EXPECT_EQ(temp.GetFirst(), 'a');
+  EXPECT_EQ(temp.GetData(), 10);
 }
 
-TEST(TArrayList, can_Get_last)
+TEST(TListElem, can_get_next_listelem)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
+  TListElem<int> temp(10);
 
-	EXPECT_EQ(temp.GetLast(), 'a');
+  ASSERT_NO_THROW(temp.GetNext());
 }
 
-TEST(TArrayList, can_del_iterator)
+TEST(TListElem, can_get_prev_listelem)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-	TArrayListIterator<char> i(temp, 1);
+  TListElem<int> temp(10);
 
-	ASSERT_NO_THROW(temp.Del(i));
+  ASSERT_NO_THROW(temp.GetPrev());
 }
 
-
-TEST(TArrayList, can_get_count)
+TEST(TListElem, can_set_data_listelem)
 {
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-
-	EXPECT_EQ(temp.GetCount(), 1);
-}
-
-TEST(TArrayList, can_GetData_iterator)
-{
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-	TArrayListIterator<char> i(temp, 1);
-	ASSERT_NO_THROW(i.GetData());
-}
-
-TEST(TArrayList, can_GetIndex_iterator)
-{
-	TArrayList<char> temp(1);
-	temp.InsFirst('a');
-	TArrayListIterator<char> i(temp, 1);
-	ASSERT_NO_THROW(i.GetIndex());
+  TListElem<int> temp(10);
+  
+  ASSERT_NO_THROW(temp.SetData(20));
 }
