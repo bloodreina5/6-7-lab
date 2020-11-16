@@ -1,0 +1,13 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+before_script:
+  - mkdir ../build
+  - cd ../build
+script:
+  - cmake ../6-7-lab
+  - make -j
+  - ./test/MP_6_7_TESTS
+notifications:
+  email: false
