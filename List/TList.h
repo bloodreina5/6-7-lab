@@ -1,205 +1,365 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef _LIST_
+#define _LIST_
 
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-template <typename T>
-class TStack
+template <class T>
+class TListElem
 {
-private:
-	T* stackPtr;                      // указатель на стек
-	const int size;                   // максимальное количество элементов в стеке
-	int num;                          // номер текущего элемента стека
+protected:
+	T data;
+	TListElem* next = 0;
+	TListElem* prev = 0;
 public:
-	TStack(int = 25);                  // по умолчанию размер стека равен 25 элементам
-	TStack(const TStack<T>&);          // конструктор копирования
-	~TStack();                         // деструктор
+	TListElem(T _data);
+	~TListElem();
 
+	T GetData();
+	TListElem* GetNext();
+	TListElem* GetPrev();
 
-	inline int IsEmpty(void) const; // контроль пустоты
-	inline int IsFull(void) const; // контроль переполнения
-	inline void put(const T&);     // поместить элемент в вершину стека
-	inline T deleteElem();          // удалить элемент из вершины стека и вернуть его
-	inline const T& Peek(int) const; // n-й элемент от вершины стека
-	inline int getStackSize() const;  // получить размер стека
-	inline T* getPtr() const;         // получить указатель на стек
-	inline int getNum() const;        // получить номер текущего элемента в стеке
+	void SetData(T _data);
+	void SetNext(TListElem* _next);
+	void SetPrev(TListElem* _prev);
 
-	//Доп задания
-	inline int min_elem(); //Поиск минимального элемента
-	inline int max_elem(); //Поиск максимального элемента
-
-
-	friend ostream& operator<<(ostream& out, const TStack& st)
-	{
-		for (int ix = st.num - 1; ix >= 0; ix--)
-			cout << st.stackPtr[ix] << endl;
-		return out;
-	}
+	template <class T1>
+	friend ostream& operator<< (ostream& ostr, const TListElem<T1>& A);
+	template <class T1>
+	friend istream& operator>> (istream& istr, TListElem<T1> A);
 };
 
-// конструктор Стека
-template <typename T>
-TStack<T>::TStack(int maxSize) : size(maxSize) // инициализация константы
-{
-	if (maxSize < 0)
-	{
-		throw  logic_error("ERROR");
-	}
-	stackPtr = new T[size]; // выделить память под стек
-	num = 0; // инициализируем текущий элемент нулем;
-}
-
-template <typename T> // контроль пустоты
-inline int TStack<T>::IsEmpty() const
-{
-	return stackPtr == NULL;
-
-	for (int i = 0; i < size; i++)
-	{
-		if (stackPtr[i] == 0)
-		{
-			continue;
-		}
-		else
-		{
-			throw  logic_error("ERROR");
-		}
-
-	}
-}
-
-
-template <typename T> // контроль переполнения
-inline int TStack<T>::IsFull() const
-{
-
-	for (int i = 0; i < size; i++)
-	{
-		if (stackPtr[i] != 0)
-		{
-			continue;
-		}
-		else
-		{
-			throw  logic_error("ERROR");
-		}
-	}
-}
-
-
-// конструктор копирования
-template <typename T>
-TStack<T>::TStack(const TStack<T>& otherStack) : size(otherStack.getStackSize()) // инициализация константы
-{
-	stackPtr = new T[size]; // выделить память под новый стек
-	num = otherStack.getNum();
-
-	for (int ix = 0; ix < num; ix++)
-	{
-		stackPtr[ix] = otherStack.getPtr()[ix];
-	}
-}
-//деструктор
-template <typename T>
-TStack<T>::~TStack()
-{
-	if (this->stackPtr != NULL)
-	{
-		delete[] stackPtr; // удаляем стек
-	}
-	num = 0;
-}
-
-// функция добавления элемента в стек
-template <typename T>
-inline void TStack<T>::put(const T& value)
-{
-	if (num > size - 1 || num < 0)
-	{
-		throw  logic_error("ERROR");
-	}
-
-	stackPtr[num++] = value; // помещаем элемент в стек
-}
-
-// функция удаления элемента из стека
-template <typename T>
-inline T TStack<T>::deleteElem()
-{
-	if (num < NULL)
-	{
-		throw  logic_error("ERROR");
-	}
-
-	stackPtr[--num]; // удаляем элемент из стека
-
-	return stackPtr[num];
-}
-
-// функция возвращает n-й элемент от вершины стека
 template <class T>
-inline const T& TStack<T>::Peek(int Elem) const
+class TList
 {
-	if (Elem > num)
+protected:
+	TListElem<T>* root = 0;
+	TListElem<T>* end = 0;
+	int count;
+
+public:
+	TList();
+	TList(TList<T>& _v);
+	~TList();
+
+	TList<T>& operator =(TList<T>& _v);
+
+	void InsFirst(T d); //Вставка элемента
+	void InsLast(T d); //Вставка элемента
+	void Ins(TListElem<T>* e, T d); //Вставка элемента
+	bool IsFull(void) const; // контроль пустоты
+	bool IsEmpty(void) const; // контроль пустоты
+
+	TListElem<T>* GetFirst(); //Получение элемента
+	TListElem<T>* GetLast(); //Получение элемента
+
+	void DelFirst();
+	void DelLast();
+	void Del(TListElem<T>* e);
+	int GetCount();
+
+	template <class T1>
+	friend ostream& operator<< (ostream& ostr, const TList<T1>& A);
+	template <class T1>
+	friend istream& operator >> (istream& istr, TList<T1>& A);
+};
+
+template<class T1>
+inline ostream& operator<<(ostream& ostr, const TListElem<T1>& A)
+{
+	return ostr << A.data;
+}
+
+template<class T1>
+inline istream& operator>>(istream& istr, TListElem<T1> A)
+{
+	return istr >> A.data;
+}
+
+template <class T1>
+ostream& operator<< (ostream& ostr, const TList<T1>& A)
+{
+	TListElem<T1>* i = A.root;
+	while (i != 0)
 	{
-		throw  logic_error("ERROR");
+		ostr << *i << endl;
+		i = i->GetNext();
 	}
-	return stackPtr[num - Elem]; // вернуть n-й элемент стека
+	return ostr;
 }
 
-// вернуть размер стека
-template <typename T>
-inline int TStack<T>::getStackSize() const
-{
-	return size;
+template <class T1>
+istream& operator >> (istream& istr, TList<T1>& A) {
+	int count;
+	istr >> count;
+	for (int i = 0; i < A.count; i++) {
+		T1 d;
+		istr >> d;
+		A.InsLast(d);
+	}
+	return istr;
 }
 
-// вернуть указатель на стек (для конструктора копирования)
-template <typename T>
-inline T* TStack<T>::getPtr() const
+
+template<class T>
+inline TList<T>::TList()
 {
-	return stackPtr;
+	root = 0;
+	end = 0;
+	count = 0;
 }
 
-// вернуть размер стека
-template <typename T>
-inline int TStack<T>::getNum() const
+template <class T>
+TList<T>::TList(TList<T>& _v)
 {
-	return num;
-}
+	count = _v.count;
+	TListElem<T>* i = _v.root;
+	TListElem<T>* j = this->root;
+	TListElem<T>* p = 0;
 
-//Поиск максимального элемента
-template<typename T>
-inline int TStack<T>::max_elem()
-{
-	int res = stackPtr[0];
-	for (int i = 1; i < size; i++)
+	while (i != 0)
 	{
-		if (stackPtr[i] > res)
+		j = new TListElem<T>(*i);
+		j->SetNext(0);
+		if (p != 0)
 		{
-			res = stackPtr[i];
+			p->SetNext(j);
+			j->SetPrev(p);
 		}
+		p = j;
+
+		if (root == 0)
+		{
+			root = j;
+		}
+
+		end = j;
+		i = i->GetNext(); //next?
 	}
-	return res;
 }
 
-//Поиск минимального элемента
-template<typename T>
-inline int TStack<T>::min_elem()
+template <class T>
+TList<T>::~TList()
 {
-	int res = stackPtr[0];
-	for (int i = 1; i < size; i++)
+	if (this->root != 0)
 	{
-		if (stackPtr[i] < res)
+		TListElem<T>* i = this->root;
+		TListElem<T>* p = 0;
+
+		while (i != 0)
 		{
-			res = stackPtr[i];
+			p = i;
+			i = i->GetNext();
+			delete p;
 		}
+
+		this->root = 0;
+		this->end = 0;
+		count = 0;
 	}
-	return res;
 }
+
+template <class T>
+TList<T>& TList<T>::operator =(TList<T>& _v)
+{
+	if (this == &_v)
+		return *this;
+
+	if (this->root != 0)
+	{
+		TListElem<T>* i = this->root;
+		TListElem<T>* p = 0;
+		while (i != 0)
+		{
+			p = i;
+			i = i->GetNext();
+			delete p;
+		}
+
+		this->root = 0;
+		this->end = 0;
+		count = 0;
+	}
+
+	count = _v.count;
+
+	TListElem<T>* i = _v.root;
+	TListElem<T>* j = this->root;
+	TListElem<T>* p = 0;
+	while (i != 0)
+	{
+		j = new TListElem<T>(*i);
+		j->SetNext(0);
+		if (p != 0)
+		{
+			p->SetNext(j);
+			j->SetPrev(p);
+		}
+		p = j;
+
+		if (root == 0)
+		{
+			root = j;
+		}
+
+		end = j;
+
+		i = i->GetNext();
+	}
+
+	return *this;
+}
+
+template<class T>
+inline void TList<T>::InsFirst(T d)
+{
+	TListElem<T>* temp = new TListElem<T>(d);
+	temp->SetNext(root);
+	root = temp;
+	count++;
+}
+
+template<class T>
+inline void TList<T>::InsLast(T d)
+{
+	TListElem<T>* temp = new TListElem<T>(d);
+	temp->SetNext(end);
+	end = temp;
+	count++;
+}
+
+template<class T>
+inline void TList<T>::Ins(TListElem<T>* e, T d)
+{
+	TListElem<T>* temp = new TListElem<T>(d);
+	temp->SetNext(e->GetNext());
+	temp->SetPrev(e);
+	e->GetNext()->SetPrev(temp);
+	e->SetNext(temp);
+	count++;
+}
+
+template<class T>
+inline bool TList<T>::IsFull(void) const
+{
+	try
+	{
+		TListElem<T>* temp = new TListElem<T>(1);
+		delete temp;
+
+		return false;
+	}
+	catch (...)
+	{
+		return true;
+	}
+}
+
+template<class T>
+inline bool TList<T>::IsEmpty(void) const
+{
+	return count == 0;
+}
+
+
+template<class T>
+inline TListElem<T>* TList<T>::GetFirst()
+{
+	return root;
+}
+
+template<class T>
+inline TListElem<T>* TList<T>::GetLast()
+{
+	return end;
+}
+
+template<class T>
+inline void TList<T>::DelFirst()
+{
+	TListElem<T>* i = this->root;
+	root = root->GetNext();
+	count--;
+	delete i;
+}
+
+template<class T>
+inline void TList<T>::DelLast()
+{
+	TListElem<T>* i = this->end;
+	end = root->GetPrev();
+	count--;
+	delete i;
+}
+
+template<class T>
+inline void TList<T>::Del(TListElem<T>* e)
+{
+	e->GetPrev()->SetNext(e->GetNext());
+	e->GetNext()->SetPrev(e->GetPrev());
+
+	count--;
+	delete e;
+}
+
+template<class T>
+inline int TList<T>::GetCount()
+{
+	return count;
+}
+
 
 #endif
+
+template<class T>
+inline TListElem<T>::TListElem(T _data)
+{
+	data = _data;
+	next = 0;
+	prev = 0;
+
+}
+
+template<class T>
+inline TListElem<T>::~TListElem()
+{
+	next = 0;
+	prev = 0;
+}
+
+template<class T>
+inline T TListElem<T>::GetData()
+{
+	return data;
+}
+
+template<class T>
+inline TListElem<T>* TListElem<T>::GetNext()
+{
+	return next;
+}
+
+template<class T>
+inline TListElem<T>* TListElem<T>::GetPrev()
+{
+	return prev;
+}
+
+template<class T>
+inline void TListElem<T>::SetData(T _data)
+{
+	data = _data;
+}
+
+template<class T>
+inline void TListElem<T>::SetNext(TListElem* _next)
+{
+	next = _next;
+}
+
+template<class T>
+inline void TListElem<T>::SetPrev(TListElem* _prev)
+{
+	prev = _prev;
+}

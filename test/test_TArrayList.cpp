@@ -1,153 +1,138 @@
+#include "TArrayList.h"
 #include <gtest.h>
-#include "Steck.h"
-#include "Steck.cpp"
 
-
-
-TEST(TStack, can_create_stack_with_positive_length) //Создание положительного
+TEST(TArrayList, can_create_Arraylist)
 {
-	ASSERT_NO_THROW(TStack<int> S_INT(5));
-	ASSERT_NO_THROW(TStack<char> S_CHAR(5));
-
+	ASSERT_NO_THROW(TArrayList<int> temp(10));
 }
 
-TEST(TStack, throws_when_create_stack_with_negative_length) //Ошибка при создании отрицательного
+TEST(TArrayList, can_create_Arraylist_Iterator)
 {
-	ASSERT_ANY_THROW(TStack<int> S_INT(-5));
-	ASSERT_ANY_THROW(TStack<char> S_CHAR(-5));
-
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(TArrayListIterator<int> i(temp));
 }
 
-TEST(TStack, can_set_elem) //Добавление элемента
+TEST(TArrayList, can_copy_Arraylist)
 {
-	TStack<int> S(5);
-
-	ASSERT_NO_THROW(S.put(1));
-
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(TArrayList<int> temp2(temp));
 }
 
-TEST(TStack, can_get_size) //Получить размер
+TEST(TArrayList, can_copy_Arraylist_Iterator)
 {
-	TStack<int> S(5);
-
-	EXPECT_EQ(S.getStackSize(), 5);
-
+	TArrayList<int> temp(10);
+	TArrayListIterator<int> i(temp);
+	ASSERT_NO_THROW(TArrayListIterator<int> j = i);
 }
 
-TEST(TStack, Is_Overflown) //контроль переполнения
+TEST(TArrayList, can_insert_elem_first) //Вставка элемента в начало
 {
-
-	TStack<int> S(4);
-
-	S.put(1);
-	S.put(2);
-	S.put(3);
-	S.put(4);
-
-	ASSERT_NO_THROW();
-
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(temp.InsFirst(1));
 }
 
-TEST(TStack, IS_Empty) //контроль пустоты
+TEST(TArrayList, cant_insert_elem_isFull)
 {
-	TStack<int> S(4);
-
-	S.put(1);
-	S.put(2);
-	S.put(3);
-	S.put(4);
-
-	ASSERT_NO_THROW();
+	TArrayList<int> temp(1);
+	temp.InsFirst(1);
+	ASSERT_ANY_THROW(temp.InsFirst(2));
 }
 
-
-TEST(TStack, can_clear_bit) //Удалить элемент
+TEST(TArrayList, can_insert_elem_last)
 {
-	TStack<int> S(4);
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(temp.InsLast(1));
+}
 
-	S.put(0);
-	S.put(1);
-	S.put(2);
-	S.put(3);
+TEST(TArrayList, can_insert_through_iterator)
+{
+	TArrayList<char> temp(10);
+	temp.InsFirst('a');
+	temp.InsLast('b');
+	temp.InsFirst('c');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(temp.Ins(i, 'd'));
+}
 
-	ASSERT_NO_THROW(S.deleteElem());
+TEST(TArrayList, check_isFull)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
+	EXPECT_EQ(temp.IsFull(), true);
+}
+
+TEST(TArrayList, check_isEmpty)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.IsEmpty(), false);
 }
 
 
-TEST(TStack, get_elem) //Получить элемент
+TEST(TArrayList, can_del_first)
 {
-	TStack<int> S(2);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	S.put(0);
-	S.put(2);
+	ASSERT_NO_THROW(temp.DelFirst());
+}
 
-	EXPECT_EQ(S.Peek(1), 2);
+TEST(TArrayList, can_del_last)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
+	ASSERT_NO_THROW(temp.DelLast());
+}
+
+TEST(TArrayList, can_Get_first)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.GetFirst(), 'a');
+}
+
+TEST(TArrayList, can_Get_last)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.GetLast(), 'a');
+}
+
+TEST(TArrayList, can_del_iterator)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
+
+	ASSERT_NO_THROW(temp.Del(i));
 }
 
 
-TEST(TStack, can_create_copy) //Копирование
+TEST(TArrayList, can_get_count)
 {
-	TStack<int> S1(5);
-	S1.put(1);
-	TStack<int> S2 = S1;
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	EXPECT_EQ(S1.Peek(1), S2.Peek(1));
-
+	EXPECT_EQ(temp.GetCount(), 1);
 }
 
-TEST(TStack, throws_when_set_stack_with_too_large_index) //Ошибка, при добавлении лишнего элемента
+TEST(TArrayList, can_GetData_iterator)
 {
-	TStack<int> S(2);
-
-	S.put(1);
-	S.put(2);
-
-	ASSERT_ANY_THROW(S.put(3));
-
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(i.GetData());
 }
 
-TEST(TStack, can_get_pointer) //Получить указатель
+TEST(TArrayList, can_GetIndex_iterator)
 {
-	TStack<int> S(2);
-
-	S.put(1);
-	S.put(2);
-
-	ASSERT_NO_THROW(S.getPtr());
-
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(i.GetIndex());
 }
-
-TEST(TStack, can_get_num) //Получить номер текущего элемента
-{
-	TStack<int> S(2);
-
-	S.put(1);
-	S.put(2);
-
-	EXPECT_EQ(S.getNum(), 2);
-}
-
-TEST(TStack, can_get_MIN_elem) //Поиск минимального элемента
-{
-	TStack<int> S(3);
-
-	S.put(2);
-	S.put(4);
-	S.put(6);
-
-	EXPECT_EQ(S.min_elem(), 2);
-}
-
-TEST(TStack, can_get_MAX_elem) //Поискмаксимального элемента
-{
-	TStack<int> S(3);
-
-	S.put(2);
-	S.put(4);
-	S.put(6);
-
-	EXPECT_EQ(S.max_elem(), 6);
-}
-

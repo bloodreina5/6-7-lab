@@ -1,98 +1,138 @@
-#include "Queue.h"
-#include "Queue.cpp"
+#include "TArrayList.h"
 #include <gtest.h>
 
-TEST(TQueue, can_create_queue_with_positive_length)
+TEST(TArrayList, can_create_Arraylist)
 {
-	ASSERT_NO_THROW(TQueue<int> qe(3));
+	ASSERT_NO_THROW(TArrayList<int> temp(10));
 }
 
-TEST(TQueue, cant_create_queue_with_null)
+TEST(TArrayList, can_create_Arraylist_Iterator)
 {
-	ASSERT_ANY_THROW(TQueue<int> qe(0));
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(TArrayListIterator<int> i(temp));
+}
+
+TEST(TArrayList, can_copy_Arraylist)
+{
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(TArrayList<int> temp2(temp));
+}
+
+TEST(TArrayList, can_copy_Arraylist_Iterator)
+{
+	TArrayList<int> temp(10);
+	TArrayListIterator<int> i(temp);
+	ASSERT_NO_THROW(TArrayListIterator<int> j = i);
+}
+
+TEST(TArrayList, can_insert_elem_first) //Вставка элемента в начало
+{
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(temp.InsFirst(1));
+}
+
+TEST(TArrayList, cant_insert_elem_isFull)
+{
+	TArrayList<int> temp(1);
+	temp.InsFirst(1);
+	ASSERT_ANY_THROW(temp.InsFirst(2));
+}
+
+TEST(TArrayList, can_insert_elem_last)
+{
+	TArrayList<int> temp(10);
+	ASSERT_NO_THROW(temp.InsLast(1));
+}
+
+TEST(TArrayList, can_insert_through_iterator)
+{
+	TArrayList<char> temp(10);
+	temp.InsFirst('a');
+	temp.InsLast('b');
+	temp.InsFirst('c');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(temp.Ins(i, 'd'));
+}
+
+TEST(TArrayList, check_isFull)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.IsFull(), true);
+}
+
+TEST(TArrayList, check_isEmpty)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.IsEmpty(), false);
 }
 
 
-TEST(TQueue, create_empty_queue)
+TEST(TArrayList, can_del_first)
 {
-	TQueue<int> qe(3);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	EXPECT_EQ(true, qe.IsEmpty());
+	ASSERT_NO_THROW(temp.DelFirst());
 }
 
-TEST(TQueue, can_push_if_ok)
+TEST(TArrayList, can_del_last)
 {
-	TQueue<int> qe(3);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	ASSERT_NO_THROW(qe.Push(3));
+	ASSERT_NO_THROW(temp.DelLast());
 }
 
-TEST(TQueue, can_get_elem)
+TEST(TArrayList, can_Get_first)
 {
-	TQueue<int> qe(2);
-	qe.Push(4);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	EXPECT_EQ(4, qe.Get());
+	EXPECT_EQ(temp.GetFirst(), 'a');
 }
 
-TEST(TQueue, cant_get_if_empty)
+TEST(TArrayList, can_Get_last)
 {
-	TQueue<int> qe(1);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
 
-	ASSERT_ANY_THROW(qe.Get());
+	EXPECT_EQ(temp.GetLast(), 'a');
 }
 
-TEST(TQueue, can_copy_queue)
+TEST(TArrayList, can_del_iterator)
 {
-	TQueue<int> qe1(2);
-	qe1.Push(1);
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
 
-	ASSERT_NO_THROW(TQueue<int> qe2(qe1));
+	ASSERT_NO_THROW(temp.Del(i));
 }
 
-TEST(TQueue, can_assing_queue)
-{
-	TQueue<int> qe1(2);
-	qe1.Push(1);
-	TQueue<int> qe2(2);
-	qe2 = qe1;
 
-	EXPECT_EQ(1, qe2.Get());
+TEST(TArrayList, can_get_count)
+{
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+
+	EXPECT_EQ(temp.GetCount(), 1);
 }
 
-TEST(TQueue, test_ring_queue)
+TEST(TArrayList, can_GetData_iterator)
 {
-	TQueue<int> qe(2);
-	qe.Push(1);
-	qe.Push(2);
-	qe.Push(3);
-	EXPECT_EQ(2, qe.Get());
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(i.GetData());
 }
 
-TEST(TQueue, can_get_Lenght)
+TEST(TArrayList, can_GetIndex_iterator)
 {
-	TQueue<int> qe(2);
-
-	EXPECT_EQ(2, qe.Length());
+	TArrayList<char> temp(1);
+	temp.InsFirst('a');
+	TArrayListIterator<char> i(temp, 1);
+	ASSERT_NO_THROW(i.GetIndex());
 }
-
-TEST(TQueue, can_get_MIN_elem)
-{
-	TQueue<int> qe(3);
-	qe.Push(1);
-	qe.Push(14);
-	qe.Push(7);
-
-	EXPECT_EQ(1, qe.min_elem());
-}
-
-TEST(TQueue, can_get_MAX_elem)
-{
-	TQueue<int> qe(3);
-	qe.Push(1);
-	qe.Push(14);
-	qe.Push(7);
-
-	EXPECT_EQ(14, qe.max_elem());
-}
-
